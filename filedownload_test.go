@@ -90,7 +90,9 @@ func Test_download(t *testing.T) {
 	err := Download(
 		`https://www.pezeshkonline.ir/download/doctormaleki-200519143319.jpg`,
 		20,
-		0)
+		0,
+		".")
+
 	if err != nil {
 		t.Fatal(err)
 	}
