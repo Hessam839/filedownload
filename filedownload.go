@@ -54,6 +54,7 @@ func Download(uri string, nChunk int, timeOut time.Duration, dir string) error {
 		uri:            uri,
 		Timeout:        timeOut,
 		numberOfChunks: nChunk,
+		dir:            dir,
 	}
 	available := make(chan bool)
 	//done := make(chan bool)
