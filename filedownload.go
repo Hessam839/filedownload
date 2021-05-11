@@ -45,7 +45,7 @@ type funcFeedback struct {
 	stat   status
 }
 
-func Download(uri string, nChunk int, timeOut time.Duration) error {
+func Download(uri string, nChunk int, timeOut time.Duration, dir string) error {
 	var feedbacks []*funcFeedback
 
 	d := &Downloader{
