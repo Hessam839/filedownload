@@ -11,7 +11,10 @@ func downloadChunk(d *Downloader, file *os.File, chunkIndex int, available chan 
 	//for {
 	<-available
 
-	client := http.Client{Timeout: d.Timeout}
+	client := http.Client{}
+	if d.Timeout > 0 {
+		client.Timeout = d.Timeout
+	}
 
 	cursor := d.chunk[chunkIndex].Begin
 
@@ -49,6 +52,8 @@ func downloadChunk(d *Downloader, file *os.File, chunkIndex int, available chan 
 	defer func() {
 		_ = response.Body.Close()
 	}()
+
+	io.NopCloser(response.Body)
 
 	buf := make([]byte, d.chunkSize+2)
 
