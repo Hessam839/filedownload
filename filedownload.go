@@ -2,7 +2,6 @@ package filedownload
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -101,7 +100,7 @@ r:
 				break r
 			}
 			feedbacks = append(feedbacks, f)
-			fmt.Printf("%+v\n", f)
+			//fmt.Printf("%+v\n", f)
 		}
 	}
 
