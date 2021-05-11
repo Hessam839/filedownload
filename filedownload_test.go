@@ -1,6 +1,9 @@
 package filedownload
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func Test_GetFileInfo(t *testing.T) {
 	d := NewDownloader()
@@ -84,8 +87,14 @@ func Benchmark_CreateChunk(b *testing.B) {
 }
 
 func Test_download(t *testing.T) {
-	err := Download(`https://www.pezeshkonline.ir/download/doctormaleki-200519143319.jpg`, 10)
+	err := Download(`https://cdna.p30download.ir/p30dl-software/IDM.UEStudio.v21.00.0.7.x64_p30download.com.rar`, 20)
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func NewDownloader() *Downloader {
+	return &Downloader{
+		Timeout: 15 * time.Second,
 	}
 }
