@@ -2,6 +2,7 @@ package filedownload
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -44,12 +45,12 @@ type funcFeedback struct {
 	stat   status
 }
 
-func Download(uri string, nChunk int) error {
+func Download(uri string, nChunk int, timeOut time.Duration) error {
 	var feedbacks []*funcFeedback
 
 	d := &Downloader{
 		uri:            uri,
-		Timeout:        15 * time.Second,
+		Timeout:        timeOut,
 		numberOfChunks: nChunk,
 	}
 	available := make(chan bool)
@@ -100,7 +101,7 @@ r:
 				break r
 			}
 			feedbacks = append(feedbacks, f)
-			//fmt.Printf("%+v\n", f)
+			fmt.Printf("chunk %d stat: %+v error: %v\n", f.id, f.stat.success, f.stat.error)
 		}
 	}
 
