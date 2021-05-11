@@ -1,12 +1,10 @@
 package filedownload
 
-import "fmt"
-
 func createChunk(d *Downloader) error {
 	n := int64(d.numberOfChunks)
 	reminder := d.fileSize % n
 	roundedFileSize := d.fileSize - reminder
-	chunkSize := roundedFileSize /n
+	chunkSize := roundedFileSize / n
 
 	d.chunkSize = chunkSize
 
@@ -25,6 +23,6 @@ func createChunk(d *Downloader) error {
 		nextBoundary = boundary + chunkSize
 	}
 
-	fmt.Print(chunkSize)
+	//fmt.Print(chunkSize)
 	return nil
 }
