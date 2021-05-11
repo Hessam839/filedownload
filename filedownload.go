@@ -2,7 +2,6 @@ package filedownload
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"os"
 	"path"
@@ -104,7 +103,7 @@ r:
 				break r
 			}
 			feedbacks = append(feedbacks, f)
-			fmt.Printf("chunk %d stat: %+v error: %v\n", f.id, f.stat.success, f.stat.error)
+			//fmt.Printf("chunk %d stat: %+v error: %v\n", f.id, f.stat.success, f.stat.error)
 		}
 	}
 
