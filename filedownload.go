@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path"
 	"time"
 )
 
@@ -24,6 +25,7 @@ type Chunk struct {
 
 type Downloader struct {
 	Timeout             time.Duration
+	dir                 string
 	fileName            string
 	fileSize            int64
 	chunk               []Chunk
@@ -69,7 +71,7 @@ func Download(uri string, nChunk int, timeOut time.Duration, dir string) error {
 		return err
 	}
 
-	file, err := os.OpenFile(d.fileName, os.O_WRONLY, 0666)
+	file, err := os.OpenFile(path.Join(d.dir, d.fileName), os.O_WRONLY, 0666)
 	if err != nil {
 		return err
 	}
