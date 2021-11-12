@@ -98,6 +98,10 @@ func Test_download(t *testing.T) {
 	}
 }
 
+func Test_CheckMimeType(t *testing.T) {
+	CheckMimeType(`jpeg`)
+}
+
 func NewDownloader() *Downloader {
 	return &Downloader{
 		Timeout: 15 * time.Second,

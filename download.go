@@ -53,7 +53,7 @@ func downloadChunk(d *Downloader, file *os.File, chunkIndex int, available chan 
 		_ = response.Body.Close()
 	}()
 
-	io.NopCloser(response.Body)
+	//io.NopCloser(response.Body)
 
 	buf := make([]byte, d.chunkSize+2)
 
