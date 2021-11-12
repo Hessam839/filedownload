@@ -30,7 +30,7 @@ type Downloader struct {
 	chunk               []Chunk
 	chunkSize           int64
 	numberOfConnections int
-	numberOfChunks      int
+	numberOfChunks      int64
 	uri                 string
 	info                urlInfo
 }
@@ -40,22 +40,22 @@ type status struct {
 }
 
 type funcFeedback struct {
-	id     int
+	id     int64
 	chunk  Chunk
 	cursor int64
 	stat   status
 }
 
-func Download(uri string, nChunk int, timeOut time.Duration, dir string) error {
+func Download(uri string, nConn int, timeOut time.Duration, dir string) error {
 	var feedbacks []*funcFeedback
 
 	d := &Downloader{
-		uri:            uri,
-		Timeout:        timeOut,
-		numberOfChunks: nChunk,
-		dir:            dir,
+		uri:                 uri,
+		Timeout:             timeOut,
+		numberOfConnections: nConn,
+		dir:                 dir,
 	}
-	available := make(chan bool)
+	available := make(chan int64, 10)
 	//done := make(chan bool)
 	feedBack := make(chan *funcFeedback)
 
@@ -87,15 +87,22 @@ func Download(uri string, nChunk int, timeOut time.Duration, dir string) error {
 		return err
 	}
 
-	for i := 0; i < nChunk; i++ {
-		go downloadChunk(d, file, i, available, feedBack)
-		available <- true
+	for i := 0; i < d.numberOfConnections; i++ {
+		go downloadChunk(d, file, available, feedBack)
 	}
 
-	count := nChunk
+	//for chIdx:= int64(0); chIdx < d.numberOfChunks; chIdx++ {
+	//	available <- chIdx
+	//}
 
+	count := d.numberOfChunks
+	var chIdx int64 = 0
 r:
 	for {
+		if chIdx < d.numberOfChunks {
+			available <- chIdx
+			chIdx++
+		}
 		select {
 		case f := <-feedBack:
 			count--
@@ -110,7 +117,8 @@ r:
 	//check if chunk download fail run again
 	for _, feedback := range feedbacks {
 		if !feedback.stat.success {
-			go downloadChunk(d, file, feedback.id, available, feedBack)
+			//go downloadChunk(d, file, feedback.id, available, feedBack)
+			available <- feedback.id
 		}
 	}
 	return nil

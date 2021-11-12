@@ -3,6 +3,7 @@ package filedownload
 import (
 	"errors"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"strconv"
 )
@@ -13,7 +14,12 @@ var (
 )
 
 func gatherFileInfo(d *Downloader) (*urlInfo, error) {
-	fileName := filepath.Base(d.uri)
+	parsedUrl, err := url.Parse(d.uri)
+	if err != nil {
+		return nil, err
+	}
+
+	fileName := filepath.Base(parsedUrl.Path)
 	client := http.Client{Timeout: d.Timeout}
 
 	resp, err := client.Head(d.uri)

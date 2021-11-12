@@ -1,7 +1,8 @@
 package filedownload
 
 func createChunk(d *Downloader) error {
-	n := int64(d.numberOfChunks)
+	calculateChunk(d)
+	n := d.numberOfChunks
 	reminder := d.fileSize % n
 	roundedFileSize := d.fileSize - reminder
 	chunkSize := roundedFileSize / n
@@ -25,4 +26,14 @@ func createChunk(d *Downloader) error {
 
 	//fmt.Print(chunkSize)
 	return nil
+}
+
+func calculateChunk(d *Downloader) {
+	d.numberOfChunks = 5
+	if 100_000 < d.fileSize && d.fileSize <= 1_000_000 {
+		d.numberOfChunks = 20
+	} else if 1_000_000 < d.fileSize {
+		d.numberOfChunks = d.fileSize / 200_000
+	}
+
 }

@@ -7,7 +7,7 @@ import (
 
 func Test_GetFileInfo(t *testing.T) {
 	d := NewDownloader()
-	d.uri = `https://www.pezeshkonline.ir/download/doctormaleki-200519143319.jpg`
+	d.uri = `https://dl2.soft98.ir/soft/p-q/PassMark.BurnInTest.Professional.9.2.Build.1007.rar?1623043852`
 	info, err := gatherFileInfo(d)
 	if err != nil {
 		t.Fatal(err)
@@ -60,14 +60,17 @@ func Benchmark_CreateFile(b *testing.B) {
 }
 
 func Test_CreateChunk(t *testing.T) {
+	var values []int64 = []int64{23004, 13_000_000, 5_604_002}
 	d := NewDownloader()
 	d.fileName = `test1.txt`
-	d.fileSize = 23004
-	d.numberOfChunks = 5
 
-	err := createChunk(d)
-	if err != nil {
-		t.Fatal(err)
+	for _, v := range values {
+		d.fileSize = v
+		err := createChunk(d)
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Logf("for size: %d number of chunk is: %d", d.fileSize, d.numberOfChunks)
 	}
 }
 
@@ -76,7 +79,6 @@ func Benchmark_CreateChunk(b *testing.B) {
 	d := NewDownloader()
 	d.fileName = `test1.txt`
 	d.fileSize = 23004
-	d.numberOfChunks = 5
 
 	for i := 0; i < b.N; i++ {
 		err := createChunk(d)
@@ -88,8 +90,8 @@ func Benchmark_CreateChunk(b *testing.B) {
 
 func Test_download(t *testing.T) {
 	err := Download(
-		`https://www.pezeshkonline.ir/download/doctormaleki-200519143319.jpg`,
-		20,
+		`https://dl2.soft98.ir/soft/n/Notepad.8.0.x86.rar?1623045509`,
+		6,
 		0,
 		"download")
 
@@ -104,6 +106,8 @@ func Test_CheckMimeType(t *testing.T) {
 
 func NewDownloader() *Downloader {
 	return &Downloader{
-		Timeout: 15 * time.Second,
+		Timeout:             15 * time.Second,
+		numberOfChunks:      100,
+		numberOfConnections: 20,
 	}
 }

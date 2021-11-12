@@ -6,9 +6,8 @@ import (
 )
 
 func setupFile(d *Downloader) (os.FileInfo, error) {
-	file, err := os.Create(
-		filepath.Join(d.dir,
-			d.fileName))
+	path := filepath.Join(d.dir, d.fileName)
+	file, err := os.Create(path)
 
 	if err != nil {
 		return nil, err
